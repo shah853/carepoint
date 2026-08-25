@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+	--font-sans: "Aptos", "Segoe UI", sans-serif;
+}
+
+@layer base {
+	body {
+		@apply bg-slate-50 text-slate-800 antialiased;
+	}
+
+	::selection {
+		@apply bg-blue-100 text-blue-900;
+	}
+}
