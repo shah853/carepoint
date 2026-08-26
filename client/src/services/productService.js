@@ -1,8 +1,14 @@
 import api from './api';
 
+const extractProducts = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.products)) return payload.products;
+  throw new Error('Unexpected product API response. Expected a products array.');
+};
+
 export const getProducts = async (params) => {
   const res = await api.get('/products', { params });
-  return res.data;
+  return extractProducts(res.data);
 };
 
 export const getProductById = async (id) => {

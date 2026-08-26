@@ -6,16 +6,20 @@ import Loader from '../components/common/Loader';
 function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [filters, setFilters] = useState({ keyword: '', category: '', minPrice: '', maxPrice: '' });
 
   useEffect(() => {
     const fetchProducts = async () => {
       setLoading(true);
+      setError('');
       try {
         const data = await getProducts(filters);
         setProducts(data);
       } catch (err) {
         console.error(err);
+        setProducts([]);
+        setError('Unable to load products. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -63,7 +67,7 @@ function Products() {
         />
       </div>
 
-      {loading ? <Loader /> : <ProductList products={products} />}
+      {loading ? <Loader /> : error ? <p className="py-8 text-center text-gray-500">{error}</p> : <ProductList products={products} />}
       </div>
     </div>
   );

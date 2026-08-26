@@ -2,6 +2,9 @@ import { Navigate, Routes, Route } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 import Home from '../pages/Home';
+import Doctors from '../pages/Doctors';
+import Appointments from '../pages/Appointments';
+import AppointmentBooking from '../pages/AppointmentBooking';
 
 import Products from '../pages/Products';
 import ProductDetails from '../pages/ProductDetails';
@@ -35,6 +38,32 @@ function AppRoutes() {
       <Route
         path="/"
         element={<Home />}
+      />
+
+      {/* Doctors */}
+      <Route
+        path="/doctors"
+        element={<Doctors />}
+      />
+
+      {/* Appointment Booking */}
+      <Route
+        path="/appointment-booking"
+        element={
+          <ProtectedRoute>
+            <AppointmentBooking />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* My Appointments */}
+      <Route
+        path="/appointments"
+        element={
+          <ProtectedRoute>
+            <Appointments />
+          </ProtectedRoute>
+        }
       />
 
       {/* Products */}
