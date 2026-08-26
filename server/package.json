@@ -6,9 +6,8 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "seed:doctors": "node seedDoctors.js",
     "seed:products": "node seedProducts.js",
-    "seed": "npm run seed:doctors && npm run seed:products",
+    "seed": "npm run seed:products",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
