@@ -12,7 +12,8 @@ function Doctors() {
   useEffect(() => {
     const loadDoctors = async () => {
       try {
-        setDoctors(await getDoctors());
+        const data = await getDoctors();
+        setDoctors(Array.isArray(data) ? data : []);
       } catch (loadError) {
         console.error('Failed to load doctors:', loadError);
         setError(loadError.response?.data?.message || 'Failed to load doctors.');
@@ -24,7 +25,7 @@ function Doctors() {
     loadDoctors();
   }, []);
 
-  const filteredDoctors = doctors.filter((doctor) => {
+  const filteredDoctors = (Array.isArray(doctors) ? doctors : []).filter((doctor) => {
     const searchText = search.toLowerCase().trim();
 
     return (

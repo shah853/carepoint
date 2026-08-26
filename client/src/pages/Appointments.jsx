@@ -17,7 +17,7 @@ function Appointments() {
       setError('');
 
       const data = await getMyAppointments();
-      setAppointments(data);
+      setAppointments(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error(error);
 

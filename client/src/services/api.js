@@ -14,6 +14,7 @@ api.interceptors.request.use(
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
+
         if (!payload.exp || payload.exp * 1000 > Date.now()) {
           config.headers.Authorization = `Bearer ${token}`;
         } else {
@@ -28,13 +29,23 @@ api.interceptors.request.use(
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const data = response.data;
+
+    if (typeof data === 'string' && data.trim().startsWith('<!')) {
+      return Promise.reject(
+        Object.assign(new Error('API returned HTML instead of JSON. Check Vite proxy or VITE_API_URL.'), {
+          config: response.config,
+        })
+      );
+    }
+
+    return response;
+  },
   (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');

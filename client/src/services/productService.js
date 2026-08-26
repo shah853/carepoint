@@ -1,12 +1,27 @@
 import api from './api';
 
 const extractProducts = (payload) => {
-  if (Array.isArray(payload)) return payload;
-  if (Array.isArray(payload?.products)) return payload.products;
-  throw new Error('Unexpected product API response. Expected a products array.');
+  if (Array.isArray(payload)) {
+    return payload;
+  }
+
+  if (Array.isArray(payload?.products)) {
+    return payload.products;
+  }
+
+  if (Array.isArray(payload?.data)) {
+    return payload.data;
+  }
+
+  if (typeof payload === 'string' && payload.trim().startsWith('<!')) {
+    throw new Error('Unexpected products response: received HTML instead of JSON');
+  }
+
+  console.error('Unexpected products response:', payload);
+  return [];
 };
 
-export const getProducts = async (params) => {
+export const getProducts = async (params = {}) => {
   const res = await api.get('/products', { params });
   return extractProducts(res.data);
 };
