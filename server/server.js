@@ -25,7 +25,18 @@ const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    let isLocalDevelopmentOrigin = false;
+
+    try {
+      const parsedOrigin = origin ? new URL(origin) : null;
+      isLocalDevelopmentOrigin =
+        parsedOrigin &&
+        ['localhost', '127.0.0.1'].includes(parsedOrigin.hostname);
+    } catch {
+      isLocalDevelopmentOrigin = false;
+    }
+
+    if (!origin || allowedOrigins.includes(origin) || isLocalDevelopmentOrigin) {
       return callback(null, true);
     }
 

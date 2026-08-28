@@ -41,7 +41,7 @@ const seededDoctors = doctors.map(([name, email, phone, specialization, qualific
     experience,
     department,
     available,
-    image: `https://randomuser.me/api/portraits/${gender === 'female' ? 'women' : 'men'}/${genderImageIndexes[gender]}.jpg`,
+    image: `https://i.pravatar.cc/300?img=${((genderImageIndexes[gender] - 1) % 15) + 1}`,
   };
 });
 
