@@ -6,7 +6,7 @@ function MobileMenu({ isOpen, onClose }) {
   const links = [
     { to: '/', label: 'Home', icon: '⌂' },
     { to: '/doctors', label: 'Doctors', icon: '⚕' },
-    { to: '/appointments', label: 'Appointments', icon: '□' },
+    { to: '/appointments', label: 'My Appointments', icon: '□' },
     { to: '/products', label: 'Pharmacy', icon: '+' },
     { to: '/cart', label: 'Cart', icon: '◫' },
     { to: '/orders', label: 'Orders', icon: '◷' },

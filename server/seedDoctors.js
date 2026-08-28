@@ -25,17 +25,25 @@ const doctors = [
   ['Kashif Mehmood', 'kashif.mehmood@carepoint.example', '+92 317 555 0118', 'Radiology', 'MBBS, FCPS (Radiology)', 13, 'Diagnostic Imaging', true, 'male'],
   ['Anum Waheed', 'anum.waheed@carepoint.example', '+92 318 555 0119', 'Rheumatology', 'MBBS, FCPS (Medicine), Fellowship Rheumatology', 9, 'Autoimmune Care', true, 'female'],
   ['Danish Latif', 'danish.latif@carepoint.example', '+92 319 555 0120', 'Infectious Disease', 'MBBS, FCPS (Medicine)', 11, 'Infectious Disease', true, 'male'],
-].map(([name, email, phone, specialization, qualification, experience, department, available, gender], index) => ({
-  name,
-  email,
-  phone,
-  specialization,
-  qualification,
-  experience,
-  department,
-  available,
-  image: `https://randomuser.me/api/portraits/${gender === 'female' ? 'women' : 'men'}/${32 + index}.jpg`,
-}));
+];
+
+const genderImageIndexes = { female: 0, male: 0 };
+
+const seededDoctors = doctors.map(([name, email, phone, specialization, qualification, experience, department, available, gender]) => {
+  genderImageIndexes[gender] += 1;
+
+  return {
+    name,
+    email,
+    phone,
+    specialization,
+    qualification,
+    experience,
+    department,
+    available,
+    image: `https://randomuser.me/api/portraits/${gender === 'female' ? 'women' : 'men'}/${genderImageIndexes[gender]}.jpg`,
+  };
+});
 
 const seedDoctors = async () => {
   await connectDB();
@@ -43,7 +51,7 @@ const seedDoctors = async () => {
   let updated = 0;
 
   try {
-    for (const doctor of doctors) {
+    for (const doctor of seededDoctors) {
       const result = await Doctor.updateOne(
         { email: doctor.email },
         { $set: doctor },

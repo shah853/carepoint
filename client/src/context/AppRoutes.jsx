@@ -48,7 +48,7 @@ function AppRoutes() {
 
       {/* Appointment Booking */}
       <Route
-        path="/appointment-booking"
+        path="/appointments/book/:doctorId"
         element={
           <ProtectedRoute>
             <AppointmentBooking />

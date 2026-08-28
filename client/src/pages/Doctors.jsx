@@ -153,17 +153,17 @@ function Doctors() {
 
                   </span>
 
-                  <div className="mx-auto h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-white shadow-md">
+                  <div className="mx-auto flex h-32 w-32 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-white text-5xl shadow-md">
 
-                    <img
-                      src={doctor.image || 'https://randomuser.me/api/portraits/men/32.jpg'}
-                      alt={`Dr. ${doctor.name}`}
-                      className="h-full w-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.src =
-                          'https://randomuser.me/api/portraits/men/32.jpg';
-                      }}
-                    />
+                    {doctor.image ? (
+                      <img
+                        src={doctor.image}
+                        alt={`Dr. ${doctor.name}`}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <span role="img" aria-label="Doctor avatar">👨‍⚕️</span>
+                    )}
 
                   </div>
 
@@ -220,14 +220,14 @@ function Doctors() {
 
                     {/* IMPORTANT: Booking Page */}
                     <Link
-                      to={`/appointment-booking?doctor=${doctor._id}`}
+                      to={`/appointments/book/${doctor._id}`}
                       className="w-full rounded-xl bg-blue-600 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-blue-700"
                     >
                       Book Appointment
                     </Link>
 
                     <Link
-                      to={`/appointment-booking?doctor=${doctor._id}`}
+                      to={`/appointments/book/${doctor._id}`}
                       className="w-full rounded-xl border border-slate-200 py-2.5 text-center text-sm font-semibold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-600"
                     >
                       View Details

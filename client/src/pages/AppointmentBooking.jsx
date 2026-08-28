@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { createAppointment } from '../services/appointmentService';
 
 function AppointmentBooking() {
-  const [searchParams] = useSearchParams();
+  const { doctorId } = useParams();
   const navigate = useNavigate();
-
-  const doctorId = searchParams.get('doctor');
 
   const [formData, setFormData] = useState({
     date: '',
@@ -123,14 +121,20 @@ function AppointmentBooking() {
                 className="w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
               >
                 <option value="">Select a time</option>
-                <option value="09:00 AM">09:00 AM</option>
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="11:00 AM">11:00 AM</option>
-                <option value="12:00 PM">12:00 PM</option>
-                <option value="02:00 PM">02:00 PM</option>
-                <option value="03:00 PM">03:00 PM</option>
-                <option value="04:00 PM">04:00 PM</option>
-                <option value="05:00 PM">05:00 PM</option>
+                <optgroup label="Morning">
+                  <option value="09:00 AM">09:00 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                </optgroup>
+                <optgroup label="Afternoon">
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="02:00 PM">02:00 PM</option>
+                  <option value="03:00 PM">03:00 PM</option>
+                </optgroup>
+                <optgroup label="Evening">
+                  <option value="04:00 PM">04:00 PM</option>
+                  <option value="05:00 PM">05:00 PM</option>
+                </optgroup>
               </select>
             </div>
 

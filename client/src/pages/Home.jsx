@@ -19,45 +19,20 @@ function Home() {
         getDoctors(),
       ]);
 
-      if (productsResult.status === 'fulfilled') {
-        const productData = productsResult.value;
+      setProducts(
+        productsResult.status === 'fulfilled' && Array.isArray(productsResult.value)
+          ? productsResult.value.slice(0, 8)
+          : []
+      );
 
-        setProducts(
-          Array.isArray(productData)
-            ? productData.slice(0, 8)
-            : []
-        );
-      } else {
-        console.error(
-          'Failed to load products:',
-          productsResult.reason
-        );
-        setProducts([]);
-      }
-
-      if (doctorsResult.status === 'fulfilled') {
-        const doctorData = doctorsResult.value;
-
-        if (Array.isArray(doctorData)) {
-          setDoctors(doctorData.slice(0, 3));
-        } else if (Array.isArray(doctorData?.doctors)) {
-          setDoctors(doctorData.doctors.slice(0, 3));
-        } else if (Array.isArray(doctorData?.data)) {
-          setDoctors(doctorData.data.slice(0, 3));
-        } else {
-          setDoctors([]);
-        }
-      } else {
-        console.error(
-          'Failed to load doctors:',
-          doctorsResult.reason
-        );
-        setDoctors([]);
-      }
+      setDoctors(
+        doctorsResult.status === 'fulfilled' && Array.isArray(doctorsResult.value)
+          ? doctorsResult.value.slice(0, 3)
+          : []
+      );
 
       setLoading(false);
     };
-
     fetchHomeData();
   }, []);
 
@@ -76,20 +51,17 @@ function Home() {
                 alt="Muhammad Shah"
                 className="h-28 w-28 rounded-full object-cover shadow-md sm:h-32 sm:w-32"
               />
-
               <span className="mt-3 text-sm font-semibold text-gray-700 sm:text-base">
                 Muhammad Shah
               </span>
             </div>
 
             <h1 className="mb-5 text-4xl font-bold leading-tight text-gray-900 sm:text-5xl">
-              Better Healthcare,
-              <span className="text-blue-600"> Made Simple</span>
+              Better Healthcare, <span className="text-blue-600">Made Simple</span>
             </h1>
 
             <p className="mb-8 max-w-xl text-base text-gray-600 sm:text-lg">
-              Find trusted doctors, book appointments, and shop quality
-              healthcare products — all in one place with CarePoint.
+              Find trusted doctors and shop quality health products — all in one place with CarePoint.
             </p>
 
             <div className="flex flex-col gap-4 sm:flex-row">
@@ -99,7 +71,6 @@ function Home() {
               >
                 Find a Doctor
               </Link>
-
               <Link
                 to="/products"
                 className="rounded-lg border border-blue-600 px-6 py-3 text-center font-medium text-blue-600 transition hover:bg-blue-100"
@@ -111,118 +82,11 @@ function Home() {
 
           <div className="rounded-2xl bg-white p-8 shadow-lg">
             <div className="text-center">
-              <div className="mb-5 text-7xl">
-                🏥
-              </div>
-
-              <h2 className="mb-3 text-2xl font-bold text-gray-800">
-                Complete Healthcare
-              </h2>
-
+              <div className="mb-5 text-7xl">🏥</div>
+              <h2 className="mb-3 text-2xl font-bold text-gray-800">Complete Healthcare</h2>
               <p className="text-gray-500">
-                Doctors, appointments and healthcare products in one
-                convenient platform.
+                Doctors and healthcare products in one convenient platform.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="px-4 py-12 sm:px-6">
-        <div className="mx-auto max-w-7xl">
-          <div className="mb-10 text-center">
-            <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-              Healthcare Made Easier
-            </h2>
-
-            <p className="mt-2 text-gray-500">
-              Everything you need for your healthcare journey.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-xl border p-6 text-center transition hover:shadow-md">
-              <div className="mb-4 text-4xl">
-                👨‍⚕️
-              </div>
-
-              <h3 className="mb-2 text-lg font-semibold">
-                Find Doctors
-              </h3>
-
-              <p className="mb-4 text-sm text-gray-500">
-                Find qualified doctors based on their specialization.
-              </p>
-
-              <Link
-                to="/doctors"
-                className="text-sm font-medium text-blue-600"
-              >
-                Find Doctor →
-              </Link>
-            </div>
-
-            <div className="rounded-xl border p-6 text-center transition hover:shadow-md">
-              <div className="mb-4 text-4xl">
-                📅
-              </div>
-
-              <h3 className="mb-2 text-lg font-semibold">
-                Book Appointment
-              </h3>
-
-              <p className="mb-4 text-sm text-gray-500">
-                Schedule your appointment quickly and easily.
-              </p>
-
-              <Link
-                to="/appointments"
-                className="text-sm font-medium text-blue-600"
-              >
-                My Appointments →
-              </Link>
-            </div>
-
-            <div className="rounded-xl border p-6 text-center transition hover:shadow-md">
-              <div className="mb-4 text-4xl">
-                💊
-              </div>
-
-              <h3 className="mb-2 text-lg font-semibold">
-                Medical Products
-              </h3>
-
-              <p className="mb-4 text-sm text-gray-500">
-                Shop trusted healthcare and wellness products.
-              </p>
-
-              <Link
-                to="/products"
-                className="text-sm font-medium text-blue-600"
-              >
-                Shop Products →
-              </Link>
-            </div>
-
-            <div className="rounded-xl border p-6 text-center transition hover:shadow-md">
-              <div className="mb-4 text-4xl">
-                🛒
-              </div>
-
-              <h3 className="mb-2 text-lg font-semibold">
-                Easy Shopping
-              </h3>
-
-              <p className="mb-4 text-sm text-gray-500">
-                Add products to your cart and checkout easily.
-              </p>
-
-              <Link
-                to="/cart"
-                className="text-sm font-medium text-blue-600"
-              >
-                View Cart →
-              </Link>
             </div>
           </div>
         </div>
@@ -232,19 +96,10 @@ function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Featured Doctors
-              </h2>
-
-              <p className="mt-1 text-gray-500">
-                Connect with trusted healthcare professionals.
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900">Featured Doctors</h2>
+              <p className="mt-1 text-gray-500">Connect with trusted healthcare professionals.</p>
             </div>
-
-            <Link
-              to="/doctors"
-              className="hidden font-medium text-blue-600 sm:block"
-            >
+            <Link to="/doctors" className="hidden font-medium text-blue-600 sm:block">
               View All →
             </Link>
           </div>
@@ -253,10 +108,7 @@ function Home() {
             <Loader />
           ) : doctors.length === 0 ? (
             <div className="rounded-xl border bg-white p-8 text-center">
-              <p className="text-gray-500">
-                Doctors will appear here soon.
-              </p>
-
+              <p className="text-gray-500">Doctors will appear here soon.</p>
               <Link
                 to="/doctors"
                 className="mt-4 inline-block rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
@@ -267,34 +119,19 @@ function Home() {
           ) : (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {doctors.map((doctor) => (
-                <div
-                  key={doctor._id || doctor.id}
-                  className="rounded-xl border bg-white p-6 shadow-sm"
-                >
+                <div key={doctor._id} className="rounded-xl border bg-white p-6 shadow-sm">
                   <div className="mb-5 flex items-center gap-4">
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-blue-100 text-3xl">
                       👨‍⚕️
                     </div>
-
                     <div>
-                      <h3 className="text-lg font-semibold">
-                        Dr. {doctor.name || 'Doctor'}
-                      </h3>
-
-                      <p className="text-sm text-blue-600">
-                        {doctor.specialization ||
-                          doctor.specialty ||
-                          'Medical Specialist'}
-                      </p>
+                      <h3 className="text-lg font-semibold">Dr. {doctor.name}</h3>
+                      <p className="text-sm text-blue-600">{doctor.specialization}</p>
                     </div>
                   </div>
-
                   <p className="mb-5 text-sm text-gray-500">
-                    {doctor.experience
-                      ? `${doctor.experience} years experience`
-                      : 'Experienced healthcare professional'}
+                    {doctor.experience ? `${doctor.experience} years experience` : 'Experienced professional'}
                   </p>
-
                   <Link
                     to="/doctors"
                     className="block rounded-lg bg-blue-600 py-2 text-center text-white transition hover:bg-blue-700"
@@ -312,19 +149,10 @@ function Home() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Featured Products
-              </h2>
-
-              <p className="mt-1 text-gray-500">
-                Quality healthcare products for your everyday needs.
-              </p>
+              <h2 className="text-2xl font-bold text-gray-900">Featured Products</h2>
+              <p className="mt-1 text-gray-500">Quality healthcare products for your everyday needs.</p>
             </div>
-
-            <Link
-              to="/products"
-              className="hidden font-medium text-blue-600 sm:block"
-            >
+            <Link to="/products" className="hidden font-medium text-blue-600 sm:block">
               View All →
             </Link>
           </div>
@@ -333,10 +161,7 @@ function Home() {
             <Loader />
           ) : products.length === 0 ? (
             <div className="rounded-xl border p-8 text-center">
-              <p className="text-gray-500">
-                Products will appear here soon.
-              </p>
-
+              <p className="text-gray-500">Products will appear here soon.</p>
               <Link
                 to="/products"
                 className="mt-4 inline-block rounded-lg bg-blue-600 px-5 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
@@ -352,15 +177,8 @@ function Home() {
 
       <section className="bg-blue-600 px-4 py-14 sm:px-6">
         <div className="mx-auto max-w-4xl text-center text-white">
-          <h2 className="mb-4 text-3xl font-bold sm:text-4xl">
-            Take Care of Your Health Today
-          </h2>
-
-          <p className="mb-8 text-blue-100">
-            Find a doctor, book an appointment, or explore our healthcare
-            products.
-          </p>
-
+          <h2 className="mb-4 text-3xl font-bold sm:text-4xl">Take Care of Your Health Today</h2>
+          <p className="mb-8 text-blue-100">Find a doctor or explore our healthcare products.</p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Link
               to="/doctors"
@@ -368,7 +186,6 @@ function Home() {
             >
               Find a Doctor
             </Link>
-
             <Link
               to="/products"
               className="rounded-lg border border-white px-6 py-3 font-semibold text-white transition hover:bg-blue-700"

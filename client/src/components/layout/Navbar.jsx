@@ -9,7 +9,7 @@ function Navbar() {
   const links = [
     { to: '/', label: 'Home' },
     { to: '/doctors', label: 'Doctors' },
-    { to: '/appointments', label: 'Appointments' },
+    { to: '/appointments', label: 'My Appointments' },
     { to: '/products', label: 'Pharmacy' },
     { to: '/cart', label: 'Cart' },
     { to: '/orders', label: 'Orders' },
