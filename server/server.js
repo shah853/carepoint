@@ -24,19 +24,13 @@ app.use(express.json());
 app.use(cors()); // Allow all origins to fix deployment crash
 
 app.use('/api', (req, res, next) => {
-  if (isDatabaseReady()) {
-    return next();
+  if (!isDatabaseReady()) {
+    return res.status(503).json({
+      message: 'Database connection is unavailable.',
+    });
   }
 
-  return connectDB().then((connected) => {
-    if (connected && isDatabaseReady()) {
-      return next();
-    }
-
-    return res.status(503).json({
-      message: 'Database is not ready. Please try again shortly.',
-    });
-  });
+  return next();
 });
 
 // API Routes
@@ -78,11 +72,20 @@ if (process.env.NODE_ENV === 'production') {
 app.use(notFound);
 app.use(errorHandler);
 
-// Port Handling for Railway
-const PORT = process.env.PORT || 5000;
+// Bind the port only after MongoDB is ready so deployments cannot accept
+// requests that are guaranteed to fail because the database is unavailable.
+const startServer = async () => {
+  try {
+    await connectDB();
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
+    const PORT = process.env.PORT || 5000;
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Server startup aborted: MongoDB is unavailable.');
+    process.exitCode = 1;
+  }
+};
 
-connectDB();
+startServer();
