@@ -29,6 +29,10 @@ app.use('/api/reviews', reviewRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 // Serve Frontend in Production
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.resolve(__dirname, '..', 'client', 'dist');
@@ -58,17 +62,8 @@ app.use(errorHandler);
 // Port Handling for Railway
 const PORT = process.env.PORT || 5000;
 
-const startServer = async () => {
-  try {
-    await connectDB();
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+});
 
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Server startup failed:', error.message);
-    process.exitCode = 1;
-  }
-};
-
-startServer();
+connectDB();
