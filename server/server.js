@@ -72,20 +72,17 @@ if (process.env.NODE_ENV === 'production') {
 app.use(notFound);
 app.use(errorHandler);
 
-// Bind the port only after MongoDB is ready so deployments cannot accept
-// requests that are guaranteed to fail because the database is unavailable.
-const startServer = async () => {
+const connectWithRetry = async () => {
   try {
     await connectDB();
-
-    const PORT = process.env.PORT || 5000;
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`Server running on port ${PORT}`);
-    });
   } catch (error) {
-    console.error('Server startup aborted: MongoDB is unavailable.');
-    process.exitCode = 1;
+    console.error('MongoDB is unavailable. Retrying in 10 seconds.');
+    setTimeout(connectWithRetry, 10000);
   }
 };
 
-startServer();
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${PORT}`);
+  connectWithRetry();
+});
