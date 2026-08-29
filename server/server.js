@@ -26,8 +26,14 @@ app.use('/api', (req, res, next) => {
     return next();
   }
 
-  return res.status(503).json({
-    message: 'Database is not ready. Please try again shortly.',
+  return connectDB().then((connected) => {
+    if (connected && isDatabaseReady()) {
+      return next();
+    }
+
+    return res.status(503).json({
+      message: 'Database is not ready. Please try again shortly.',
+    });
   });
 });
 

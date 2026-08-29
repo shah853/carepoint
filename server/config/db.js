@@ -8,7 +8,14 @@ require('dotenv').config({
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
+let connectionPromise;
+
 const connectDB = async () => {
+  if (connectionPromise) {
+    return connectionPromise;
+  }
+
+  connectionPromise = (async () => {
   try {
     const mongoURI = process.env.MONGO_URI;
 
@@ -25,10 +32,14 @@ const connectDB = async () => {
     });
 
     console.log('MongoDB connected successfully');
+    return true;
   } catch (error) {
     console.error('MongoDB connection failed:', error.message);
     return false;
   }
+  })();
+
+  return connectionPromise;
 };
 
 module.exports = connectDB;
