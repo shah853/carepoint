@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const dns = require('dns');
+const path = require('path');
 
-require('dotenv').config();
+require('dotenv').config({
+  path: path.resolve(__dirname, '../.env'),
+});
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
