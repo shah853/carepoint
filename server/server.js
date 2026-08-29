@@ -45,7 +45,7 @@ const corsOptions = {
 };
 
 app.use(express.json());
-app.use('/api', cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
@@ -56,10 +56,20 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, '../client/dist')));
+  const clientBuildPath = path.resolve(__dirname, '../client/dist');
 
-  app.get(/^(?!\/api).*/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  app.use(express.static(clientBuildPath));
+
+  app.get('*', (req, res, next) => {
+    if (req.originalUrl.startsWith('/api')) {
+      return next();
+    }
+
+    res.sendFile(path.join(clientBuildPath, 'index.html'), (err) => {
+      if (err) {
+        next(err);
+      }
+    });
   });
 } else {
   app.get('/', (req, res) => {
