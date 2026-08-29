@@ -5,15 +5,15 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "cd client && npm install --include=dev && npm run build && cd ../server && npm install"
+    "build": "cd client && npm install --include=dev && npm run build"
   },
   "engines": {
     "node": ">=20.19.0"
   },
   "dependencies": {
-  "react": "^18.x.x",
-  "react-dom": "^18.x.x",
-  "vite": "^5.x.x",
-  "@vitejs/plugin-react": "^4.x.x"
-}
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mongoose": "^8.3.1"
+  }
 }
