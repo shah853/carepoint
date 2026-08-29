@@ -23,7 +23,7 @@ const allowedOrigins = (process.env.CLIENT_URL || 'http://localhost:5173')
   .map((origin) => origin.trim())
   .filter(Boolean);
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
     let isLocalDevelopmentOrigin = false;
 
@@ -42,8 +42,10 @@ app.use(cors({
 
     return callback(new Error('Origin not allowed by CORS'));
   },
-}));
+};
+
 app.use(express.json());
+app.use('/api', cors(corsOptions));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
