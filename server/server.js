@@ -14,9 +14,6 @@ const reviewRoutes = require('./routes/reviewRoutes');
 const doctorRoutes = require('./routes/doctorRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 
-// Connect Database
-connectDB();
-
 const app = express();
 
 // Middleware
@@ -61,6 +58,17 @@ app.use(errorHandler);
 // Port Handling for Railway
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
+const startServer = async () => {
+  try {
+    await connectDB();
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error('Server startup failed:', error.message);
+    process.exitCode = 1;
+  }
+};
+
+startServer();
