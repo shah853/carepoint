@@ -56,7 +56,7 @@ app.use('/api/doctors', doctorRoutes);
 app.use('/api/appointments', appointmentRoutes);
 
 if (process.env.NODE_ENV === 'production') {
-  const clientBuildPath = path.resolve(__dirname, '../client/dist');
+  const clientBuildPath = path.resolve(__dirname, 'client', 'dist');
 
   app.use(express.static(clientBuildPath));
 
