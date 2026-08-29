@@ -4,6 +4,7 @@ const path = require('path');
 require('dotenv').config();
 
 const connectDB = require('./config/db');
+const { isDatabaseReady } = connectDB;
 const { notFound, errorHandler } = require('./middleware/errorMiddleware');
 
 const authRoutes = require('./routes/authRoutes');
@@ -19,6 +20,16 @@ const app = express();
 // Middleware
 app.use(express.json());
 app.use(cors()); // Allow all origins to fix deployment crash
+
+app.use('/api', (req, res, next) => {
+  if (isDatabaseReady()) {
+    return next();
+  }
+
+  return res.status(503).json({
+    message: 'Database is not ready. Please try again shortly.',
+  });
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);

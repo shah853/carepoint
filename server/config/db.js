@@ -32,3 +32,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+module.exports.isDatabaseReady = () => mongoose.connection.readyState === 1;
