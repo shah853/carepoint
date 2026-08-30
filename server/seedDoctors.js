@@ -29,6 +29,17 @@ const doctors = [
   ['Kashif Mehmood', 'kashif.mehmood@carepoint.example', '+92 317 555 0118', 'Radiology', 'MBBS, FCPS (Radiology)', 13, 'Diagnostic Imaging', true, 'male'],
   ['Anum Waheed', 'anum.waheed@carepoint.example', '+92 318 555 0119', 'Rheumatology', 'MBBS, FCPS (Medicine), Fellowship Rheumatology', 9, 'Autoimmune Care', true, 'female'],
   ['Danish Latif', 'danish.latif@carepoint.example', '+92 319 555 0120', 'Infectious Disease', 'MBBS, FCPS (Medicine)', 11, 'Infectious Disease', true, 'male'],
+  ['Hassan Raza', 'hassan.raza@carepoint.example', '+92 320 555 0121', 'Cardiology', 'MBBS, FCPS (Cardiology), FACC', 15, 'Heart Care', true, 'male'],
+  ['Mariam Siddiqui', 'mariam.siddiqui@carepoint.example', '+92 321 555 0122', 'Dermatology', 'MBBS, MCPS, FCPS (Dermatology)', 10, 'Skin Care', true, 'female'],
+  ['Ahmed Farooq', 'ahmed.farooq@carepoint.example', '+92 322 555 0123', 'General Medicine', 'MBBS, MRCP (UK)', 13, 'General Medicine', true, 'male'],
+  ['Laiba Nadeem', 'laiba.nadeem@carepoint.example', '+92 323 555 0124', 'Pediatrics', 'MBBS, FCPS (Pediatrics)', 9, 'Child Health', true, 'female'],
+  ['Saad Mahmood', 'saad.mahmood@carepoint.example', '+92 324 555 0125', 'Neurology', 'MBBS, FCPS (Neurology)', 12, 'Neurosciences', true, 'male'],
+  ['Mehwish Ali', 'mehwish.ali@carepoint.example', '+92 325 555 0126', 'Orthopedics', 'MBBS, FCPS (Orthopedic Surgery)', 16, 'Bone and Joint Care', true, 'female'],
+  ['Hamza Rehman', 'hamza.rehman@carepoint.example', '+92 326 555 0127', 'Gynecology', 'MBBS, FCPS (Obstetrics and Gynecology)', 14, 'Women Health', true, 'male'],
+  ['Eman Khalid', 'eman.khalid@carepoint.example', '+92 327 555 0128', 'ENT', 'MBBS, FCPS (Otolaryngology)', 8, 'ENT Care', true, 'female'],
+  ['Faisal Iqbal', 'faisal.iqbal@carepoint.example', '+92 328 555 0129', 'Dentistry', 'BDS, MFDS, RDS', 11, 'Dental Care', true, 'male'],
+  ['Rabia Aslam', 'rabia.aslam@carepoint.example', '+92 329 555 0130', 'Psychiatry', 'MBBS, FCPS (Psychiatry)', 10, 'Mental Health', true, 'female'],
+  ['Kamil Yousaf', 'kamil.yousaf@carepoint.example', '+92 330 555 0131', 'Ophthalmology', 'MBBS, FCPS (Ophthalmology)', 13, 'Eye Care', true, 'male'],
 ];
 
 const genderImageIndexes = { female: 0, male: 0 };
