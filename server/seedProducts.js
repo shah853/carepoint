@@ -6,7 +6,7 @@ require('dotenv').config({
 });
 
 const connectDB = require('./config/db');
-const Product = require('./models/prodcuts');
+const Product = require('./models/product');
 const Category = require('./models/category');
 
 const categoryNames = [

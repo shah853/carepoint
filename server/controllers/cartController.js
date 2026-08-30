@@ -1,5 +1,5 @@
 const Cart = require('../models/cart');
-const Product = require('../models/prodcuts');
+const Product = require('../models/product');
 
 const calculateTotalPrice = (items) =>
   items.reduce((total, item) => {
