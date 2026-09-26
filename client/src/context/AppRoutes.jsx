@@ -17,6 +17,10 @@ import Profile from '../pages/Profile';
 import Orders from '../pages/Orders';
 
 import AdminDashboard from '../pages/AdminDashboard';
+import AdminOrders from '../pages/AdminOrders';
+import AdminAppointments from '../pages/AdminAppointments';
+import AdminProducts from '../pages/AdminProducts';
+import AdminDoctors from '../pages/AdminDoctors';
 
 import NotFound from '../pages/NotFound';
 
@@ -114,6 +118,22 @@ function AppRoutes() {
       <Route
         path="/admin"
         element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>}
+      />
+      <Route
+        path="/admin/orders"
+        element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>}
+      />
+      <Route
+        path="/admin/appointments"
+        element={<ProtectedRoute adminOnly><AdminAppointments /></ProtectedRoute>}
+      />
+      <Route
+        path="/admin/products"
+        element={<ProtectedRoute adminOnly><AdminProducts /></ProtectedRoute>}
+      />
+      <Route
+        path="/admin/doctors"
+        element={<ProtectedRoute adminOnly><AdminDoctors /></ProtectedRoute>}
       />
 
       {/* 404 */}
