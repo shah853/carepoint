@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getMyOrders } from '../services/orderService';
 import Loader from '../components/common/Loader';
+import PaymentBadge from '../components/admin/PaymentBadge';
+import StatusBadge from '../components/admin/StatusBadge';
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -50,15 +52,6 @@ function Orders() {
 
     fetchOrders();
   }, []);
-
-  const statusColors = {
-    pending: 'bg-yellow-100 text-yellow-700',
-    confirmed: 'bg-blue-100 text-blue-700',
-    processing: 'bg-orange-100 text-orange-700',
-    shipped: 'bg-purple-100 text-purple-700',
-    delivered: 'bg-green-100 text-green-700',
-    cancelled: 'bg-red-100 text-red-700',
-  };
 
   const safeOrders = Array.isArray(orders) ? orders : [];
 
@@ -121,29 +114,35 @@ function Orders() {
           {safeOrders.map((order) => {
             const orderId = order?._id || order?.id || '';
             const status = order?.status || 'pending';
+            const paymentStatus = order?.paymentStatus || 'pending';
             const items = Array.isArray(order?.items)
               ? order.items
               : [];
-
-            const statusClass =
-              statusColors[status] ||
-              'bg-gray-100 text-gray-700';
 
             return (
               <div
                 key={orderId}
                 className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
               >
-                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-3">
+                <div className="flex flex-col gap-3 mb-3 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-gray-500">
                     Order #{orderId ? orderId.slice(-8) : 'N/A'}
                   </p>
 
-                  <span
-                    className={`w-fit rounded-full px-3 py-1 text-xs font-semibold ${statusClass}`}
-                  >
-                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                  </span>
+                  <div className="flex items-start gap-4">
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                        Order status
+                      </span>
+                      <StatusBadge status={status} />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <span className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                        Payment
+                      </span>
+                      <PaymentBadge paymentStatus={paymentStatus} />
+                    </div>
+                  </div>
                 </div>
 
                 <p className="text-sm text-slate-500">

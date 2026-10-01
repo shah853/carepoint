@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import AdminLayout from '../components/admin/AdminLayout';
+import StatusDropdown from '../components/admin/StatusDropdown';
 import Loader from '../components/common/Loader';
-import { getAllAppointments } from '../services/adminService';
+import { getAllAppointments, updateAppointmentStatus } from '../services/adminService';
+
+const appointmentStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
 
 const appointmentStatusStyles = {
 	pending: 'bg-amber-100 text-amber-800',
@@ -31,6 +34,18 @@ function AdminAppointments() {
 
 		return () => { active = false; };
 	}, []);
+
+	const handleStatusChange = async (id, status) => {
+		setError('');
+		try {
+			const updatedAppointment = await updateAppointmentStatus(id, status);
+			setAppointments((currentAppointments) => currentAppointments.map((appointment) => (
+				appointment._id === id ? { ...appointment, ...updatedAppointment } : appointment
+			)));
+		} catch (requestError) {
+			setError(requestError.response?.data?.message || 'Could not update the appointment.');
+		}
+	};
 
 	return (
 		<AdminLayout>
@@ -69,9 +84,17 @@ function AdminAppointments() {
 												<td className="whitespace-nowrap px-4 py-3">{appointment.date ? new Date(appointment.date).toLocaleDateString() : 'N/A'}</td>
 												<td className="whitespace-nowrap px-4 py-3">{appointment.time || 'N/A'}</td>
 												<td className="px-4 py-3">
-													<span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${appointmentStatusStyles[appointment.status] || 'bg-slate-100 text-slate-700'}`}>
-														{appointment.status || 'unknown'}
-													</span>
+													<div className="flex min-w-40 flex-col items-start gap-2">
+														<span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${appointmentStatusStyles[appointment.status] || 'bg-slate-100 text-slate-700'}`}>
+															{appointment.status || 'unknown'}
+														</span>
+														<StatusDropdown
+															ariaLabel={`Change appointment status for ${appointment._id}`}
+															currentStatus={appointment.status}
+															onChange={(status) => handleStatusChange(appointment._id, status)}
+															statuses={appointmentStatuses}
+														/>
+													</div>
 												</td>
 											</tr>
 										))}

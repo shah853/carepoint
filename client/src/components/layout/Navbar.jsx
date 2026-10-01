@@ -1,10 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import MobileMenu from './MobileMenu';
+import { useAuth } from '../../hooks/useAuth';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { user } = useAuth();
 
   const links = [
     { to: '/', label: 'Home' },
@@ -13,6 +15,7 @@ function Navbar() {
     { to: '/products', label: 'Pharmacy' },
     { to: '/cart', label: 'Cart' },
     { to: '/orders', label: 'Orders' },
+    ...(user?.role === 'admin' ? [{ to: '/admin', label: 'Admin' }] : []),
   ];
 
   const isActive = (path) => {

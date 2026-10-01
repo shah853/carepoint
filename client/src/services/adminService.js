@@ -7,8 +7,10 @@ export const getStats = async () => {
 
 export const getDashboardStats = getStats;
 
-export const getAllOrders = async () => {
-	const response = await api.get('/admin/orders');
+export const getAllOrders = async (search = '') => {
+	const response = await api.get('/admin/orders', {
+		params: search ? { search } : {},
+	});
 	return response.data;
 };
 
@@ -24,5 +26,10 @@ export const updatePaymentStatus = async (id, status) => {
 
 export const getAllAppointments = async () => {
 	const response = await api.get('/admin/appointments');
+	return response.data;
+};
+
+export const updateAppointmentStatus = async (id, status) => {
+	const response = await api.put(`/admin/appointments/${id}/status`, { status });
 	return response.data;
 };

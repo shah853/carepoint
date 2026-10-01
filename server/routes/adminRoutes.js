@@ -3,6 +3,7 @@ const {
 	getAllAppointments,
 	getAllOrders,
 	getDashboardStats,
+	updateAppointmentStatus,
 	updateOrderStatus,
 	updatePaymentStatus,
 } = require('../controllers/adminController');
@@ -17,5 +18,6 @@ router.get('/orders', getAllOrders);
 router.put('/orders/:id/status', updateOrderStatus);
 router.put('/orders/:id/payment', updatePaymentStatus);
 router.get('/appointments', getAllAppointments);
+router.put('/appointments/:id/status', updateAppointmentStatus);
 
 module.exports = router;

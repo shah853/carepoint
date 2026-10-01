@@ -84,9 +84,15 @@ function AdminDashboard() {
                           <p className="truncate text-sm font-semibold text-slate-900">{order.fullName || order.user?.name || 'Patient'}</p>
                           <p className="mt-0.5 truncate text-xs text-slate-500">#{order._id?.slice(-8)} <span aria-hidden="true">·</span> {subtitle}</p>
                         </div>
-                        <div className="flex flex-wrap items-center gap-2 sm:w-44">
-                          <StatusBadge status={order.status} />
-                          <PaymentBadge paymentStatus={order.paymentStatus} />
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 sm:w-44">
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-semibold uppercase tracking-wide text-slate-400">Order Status</span>
+                            <StatusBadge status={order.status} />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <span className="text-[9px] font-semibold uppercase tracking-wide text-slate-400">Payment</span>
+                            <PaymentBadge paymentStatus={order.paymentStatus} />
+                          </div>
                         </div>
                         <p className="text-sm font-semibold text-slate-900 sm:w-28 sm:text-right">Rs. {Number(order.totalPrice || 0).toLocaleString()}</p>
                       </div>

@@ -1,7 +1,9 @@
 import { Link, useLocation } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 function MobileMenu({ isOpen, onClose }) {
   const location = useLocation();
+  const { user } = useAuth();
 
   const links = [
     { to: '/', label: 'Home', icon: '⌂' },
@@ -10,6 +12,7 @@ function MobileMenu({ isOpen, onClose }) {
     { to: '/products', label: 'Pharmacy', icon: '+' },
     { to: '/cart', label: 'Cart', icon: '◫' },
     { to: '/orders', label: 'Orders', icon: '◷' },
+    ...(user?.role === 'admin' ? [{ to: '/admin', label: 'Admin', icon: '⚙' }] : []),
   ];
 
   const isActive = (path) => {
