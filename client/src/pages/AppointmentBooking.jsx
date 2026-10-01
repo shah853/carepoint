@@ -7,6 +7,7 @@ function AppointmentBooking() {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
+    contactNumber: '',
     date: '',
     time: '',
     reason: '',
@@ -36,6 +37,7 @@ function AppointmentBooking() {
 
       await createAppointment({
         doctor: doctorId,
+        contactNumber: formData.contactNumber.trim(),
         date: formData.date,
         time: formData.time,
         reason: formData.reason,
@@ -91,6 +93,26 @@ function AppointmentBooking() {
                 {error}
               </div>
             )}
+
+            <div>
+              <label className="mb-2 block text-sm font-semibold text-slate-700">
+                Contact Number
+              </label>
+
+              <input
+                type="tel"
+                name="contactNumber"
+                value={formData.contactNumber}
+                onChange={handleChange}
+                required
+                pattern="03[0-9]{9}"
+                maxLength="11"
+                title="Enter a valid Pakistani mobile number, for example 03001234567"
+                placeholder="03XXXXXXXXX"
+                autoComplete="tel"
+                className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+              />
+            </div>
 
             <div>
               <label className="mb-2 block text-sm font-semibold text-slate-700">

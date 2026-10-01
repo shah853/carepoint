@@ -8,16 +8,16 @@ function OrdersTable({ orders = [], onStatusChange, onPaymentChange }) {
 	return (
 		<div className="overflow-hidden rounded-lg border border-slate-200 bg-white">
 			<div className="overflow-x-auto">
-				<table className="min-w-[940px] w-full border-collapse text-left text-sm">
+				<table className="min-w-305 w-full border-collapse text-left text-sm">
 					<thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-500">
 						<tr>
 							<th className="px-4 py-3 font-semibold">Order ID</th>
 							<th className="px-4 py-3 font-semibold">Customer</th>
 							<th className="px-4 py-3 font-semibold">Items</th>
-							<th className="px-4 py-3 font-semibold">Total</th>
-							<th className="px-4 py-3 font-semibold">Status</th>
+							<th className="px-4 py-3 font-semibold">Total Amount</th>
+							<th className="px-4 py-3 font-semibold">Order Status</th>
 							<th className="px-4 py-3 font-semibold">Payment</th>
-							<th className="px-4 py-3 font-semibold">Date</th>
+							<th className="px-4 py-3 font-semibold">Order Date</th>
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-slate-100">
@@ -28,20 +28,27 @@ function OrdersTable({ orders = [], onStatusChange, onPaymentChange }) {
 								</td>
 							</tr>
 						) : orders.map((order) => {
-							const itemsCount = (order.items || []).reduce(
-								(count, item) => count + (Number(item.quantity) || 0),
-								0
-							);
 							const date = order.createdAt ? new Date(order.createdAt).toLocaleDateString() : 'N/A';
 
 							return (
 								<tr className="align-middle text-slate-700" key={order._id}>
-									<td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">#{order._id?.slice(-8) || 'N/A'}</td>
+									<td className="max-w-48 break-all px-4 py-3 font-mono text-xs font-medium text-slate-900">{order._id || 'N/A'}</td>
 									<td className="px-4 py-3">
 										<div className="font-medium text-slate-900">{order.fullName || order.user?.name || 'Customer'}</div>
-										<div className="text-xs text-slate-500">{order.user?.email || ''}</div>
+										{order.user?.email ? <div className="text-xs text-slate-500">{order.user.email}</div> : null}
+										<div className="mt-1 text-xs text-slate-600">{order.mobileNumber || 'No contact number'}</div>
+										<div className="mt-1 max-w-64 whitespace-normal wrap-break-word text-xs text-slate-500">{order.shippingAddress || 'No address provided'}</div>
 									</td>
-									<td className="px-4 py-3">{itemsCount}</td>
+									<td className="px-4 py-3">
+										<ul className="min-w-40 space-y-1">
+											{(order.items || []).map((item, index) => (
+												<li className="flex items-start justify-between gap-3" key={item._id || `${order._id}-${index}`}>
+													<span className="max-w-48 whitespace-normal text-slate-700">{item.product?.name || 'Product'}</span>
+													<span className="whitespace-nowrap text-xs text-slate-500">Qty {Number(item.quantity) || 0}</span>
+												</li>
+											))}
+										</ul>
+									</td>
 									<td className="whitespace-nowrap px-4 py-3">Rs. {Number(order.totalPrice || 0).toLocaleString()}</td>
 									<td className="px-4 py-3">
 										<div className="flex min-w-40 flex-col items-start gap-2">

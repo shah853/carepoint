@@ -8,6 +8,12 @@ const appointmentSchema = new mongoose.Schema(
       required: true,
     },
 
+    contactNumber: {
+      type: String,
+      trim: true,
+      match: /^03[0-9]{9}$/,
+    },
+
     doctor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Doctor',

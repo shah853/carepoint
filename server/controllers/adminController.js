@@ -8,6 +8,20 @@ const User = require('../models/user');
 const orderStatuses = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
 const paymentStatuses = ['pending', 'paid', 'failed'];
 const appointmentStatuses = ['pending', 'confirmed', 'completed', 'cancelled'];
+const escapeRegex = (value) => value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const getPhoneSearch = (value) => {
+	const digits = value.replace(/\D/g, '');
+	const datePattern = /^\d{1,4}[-/]\d{1,2}([-/]\d{1,4})?$/;
+
+	if (!/^[+\d\s().-]+$/.test(value) || digits.length < 3 || datePattern.test(value)) {
+		return '';
+	}
+
+	return digits.startsWith('92') && digits.length > 2
+		? `0${digits.slice(2)}`
+		: digits;
+};
 
 const getAllOrders = async (req, res) => {
 	try {
@@ -15,7 +29,25 @@ const getAllOrders = async (req, res) => {
 		let orders;
 
 		if (search) {
-			const searchRegex = new RegExp(search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i');
+			const searchRegex = new RegExp(escapeRegex(search), 'i');
+			const phoneSearch = getPhoneSearch(search);
+			const searchConditions = [
+				{ fullName: searchRegex },
+				{ 'matchedUser.name': searchRegex },
+				{ 'matchedUser.email': searchRegex },
+				{ shippingAddress: searchRegex },
+				{ 'matchedProducts.name': searchRegex },
+				{ status: searchRegex },
+				{ orderIdText: searchRegex },
+				{ orderDateISO: searchRegex },
+				{ orderDateUS: searchRegex },
+				{ orderDateLocal: searchRegex },
+			];
+
+			if (phoneSearch) {
+				searchConditions.push({ mobileNumber: new RegExp(escapeRegex(phoneSearch), 'i') });
+			}
+
 			orders = await Order.aggregate([
 				{
 					$lookup: {
@@ -36,13 +68,24 @@ const getAllOrders = async (req, res) => {
 					},
 				},
 				{
+					$addFields: {
+						orderIdText: { $toString: '$_id' },
+						orderDateISO: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },
+						orderDateUS: { $dateToString: { format: '%m/%d/%Y', date: '$createdAt' } },
+						orderDateLocal: {
+							$concat: [
+								{ $toString: { $month: '$createdAt' } },
+								'/',
+								{ $toString: { $dayOfMonth: '$createdAt' } },
+								'/',
+								{ $toString: { $year: '$createdAt' } },
+							],
+						},
+					},
+				},
+				{
 					$match: {
-						$or: [
-							{ fullName: searchRegex },
-							{ 'matchedUser.name': searchRegex },
-							{ 'matchedUser.email': searchRegex },
-							{ 'matchedProducts.name': searchRegex },
-						],
+						$or: searchConditions,
 					},
 				},
 				{ $sort: { createdAt: -1 } },
@@ -76,7 +119,7 @@ const getAllOrders = async (req, res) => {
 						},
 					},
 				},
-				{ $unset: ['matchedUser', 'matchedProducts'] },
+				{ $unset: ['matchedUser', 'matchedProducts', 'orderIdText', 'orderDateISO', 'orderDateUS', 'orderDateLocal'] },
 			]);
 		} else {
 			orders = await Order.find()
@@ -189,6 +232,78 @@ const getDashboardStats = async (req, res) => {
 
 const getAllAppointments = async (req, res) => {
 	try {
+		const search = req.query.search?.trim();
+
+		if (search) {
+			const searchRegex = new RegExp(escapeRegex(search), 'i');
+			const phoneSearch = getPhoneSearch(search);
+			const searchConditions = [
+				{ appointmentIdText: searchRegex },
+				{ 'matchedUser.name': searchRegex },
+				{ appointmentDateISO: searchRegex },
+				{ appointmentDateUS: searchRegex },
+				{ appointmentDateLocal: searchRegex },
+			];
+
+			if (phoneSearch) {
+				const phoneRegex = new RegExp(escapeRegex(phoneSearch), 'i');
+				searchConditions.push(
+					{ contactNumber: phoneRegex },
+					{ 'matchedOrders.mobileNumber': phoneRegex }
+				);
+			}
+
+			const appointments = await Appointment.aggregate([
+				{
+					$lookup: {
+						from: User.collection.name,
+						localField: 'user',
+						foreignField: '_id',
+						pipeline: [{ $project: { name: 1 } }],
+						as: 'matchedUser',
+					},
+				},
+				...(phoneSearch ? [{
+					$lookup: {
+						from: Order.collection.name,
+						localField: 'user',
+						foreignField: 'user',
+						pipeline: [{ $project: { mobileNumber: 1 } }],
+						as: 'matchedOrders',
+					},
+				}] : []),
+				{
+					$addFields: {
+						appointmentIdText: { $toString: '$_id' },
+						contactNumber: {
+							$ifNull: ['$contactNumber', { $arrayElemAt: ['$matchedOrders.mobileNumber', 0] }],
+						},
+						appointmentDateISO: { $dateToString: { format: '%Y-%m-%d', date: '$date' } },
+						appointmentDateUS: { $dateToString: { format: '%m/%d/%Y', date: '$date' } },
+						appointmentDateLocal: {
+							$concat: [
+								{ $toString: { $month: '$date' } },
+								'/',
+								{ $toString: { $dayOfMonth: '$date' } },
+								'/',
+								{ $toString: { $year: '$date' } },
+							],
+						},
+					},
+				},
+				{ $match: { $or: searchConditions } },
+				{ $sort: { date: 1 } },
+				{ $unset: ['matchedUser', 'matchedOrders', 'appointmentIdText', 'appointmentDateISO', 'appointmentDateUS', 'appointmentDateLocal'] },
+			]);
+
+			await Appointment.populate(appointments, [
+				{ path: 'user', select: 'name email' },
+				{ path: 'doctor', select: 'name specialization image' },
+			]);
+
+			return res.json(appointments);
+		}
+
 		const appointments = await Appointment.find()
 			.populate('user', 'name email')
 			.populate('doctor', 'name specialization')

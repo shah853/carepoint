@@ -197,6 +197,18 @@ function Appointments() {
                         </span>
                       </div>
 
+                      {appointment.contactNumber ? (
+                        <div className="flex justify-between gap-4 text-sm">
+                          <span className="text-slate-500">
+                            Contact number
+                          </span>
+
+                          <span className="font-medium text-slate-700">
+                            {appointment.contactNumber}
+                          </span>
+                        </div>
+                      ) : null}
+
                       <div className="text-sm">
                         <span className="text-slate-500">
                           Reason

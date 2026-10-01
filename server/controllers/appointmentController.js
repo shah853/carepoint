@@ -1,5 +1,6 @@
 const Appointment = require('../models/Appointment');
 const Doctor = require('../models/doctor');
+const Order = require('../models/order');
 const mongoose = require('mongoose');
 
 const getUserId = (req) => {
@@ -10,7 +11,7 @@ const createAppointment = async (req, res) => {
   try {
     const userId = getUserId(req);
 
-    const { doctor, date, time, reason } = req.body;
+    const { doctor, date, time, reason, contactNumber } = req.body;
 
     if (!userId) {
       return res.status(401).json({
@@ -22,6 +23,18 @@ const createAppointment = async (req, res) => {
       return res.status(400).json({
         message: 'All appointment fields are required',
       });
+    }
+
+    const submittedContactNumber = typeof contactNumber === 'string'
+      ? contactNumber.trim()
+      : '';
+
+    if (contactNumber != null && typeof contactNumber !== 'string') {
+      return res.status(400).json({ message: 'A valid contact number is required' });
+    }
+
+    if (submittedContactNumber && !/^03[0-9]{9}$/.test(submittedContactNumber)) {
+      return res.status(400).json({ message: 'Enter a valid Pakistani mobile number, for example 03001234567' });
     }
 
     if (!mongoose.isValidObjectId(userId) || !mongoose.isValidObjectId(doctor)) {
@@ -54,8 +67,17 @@ const createAppointment = async (req, res) => {
       return res.status(400).json({ message: 'A valid appointment time is required' });
     }
 
+    let savedContactNumber = submittedContactNumber;
+    if (!savedContactNumber) {
+      const previousOrder = await Order.findOne({ user: userId })
+        .sort({ createdAt: -1 })
+        .select('mobileNumber');
+      savedContactNumber = previousOrder?.mobileNumber || '';
+    }
+
     const appointment = await Appointment.create({
       user: userId,
+      contactNumber: savedContactNumber || undefined,
       doctor,
       date: appointmentDate,
       time,

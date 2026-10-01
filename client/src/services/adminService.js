@@ -24,8 +24,10 @@ export const updatePaymentStatus = async (id, status) => {
 	return response.data;
 };
 
-export const getAllAppointments = async () => {
-	const response = await api.get('/admin/appointments');
+export const getAllAppointments = async (search = '') => {
+	const response = await api.get('/admin/appointments', {
+		params: search ? { search } : {},
+	});
 	return response.data;
 };
 

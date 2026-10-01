@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { IconSearch, IconX } from '@tabler/icons-react';
 import AdminLayout from '../components/admin/AdminLayout';
 import OrdersTable from '../components/admin/OrdersTable';
 import Loader from '../components/common/Loader';
@@ -45,6 +46,12 @@ function AdminOrders() {
 		setError('');
 	};
 
+	const clearSearch = () => {
+		setSearch('');
+		setSearching(true);
+		setError('');
+	};
+
 	const handleChange = async (id, status, update) => {
 		setError('');
 		try {
@@ -65,13 +72,26 @@ function AdminOrders() {
 						<h1 className="mt-1 text-2xl font-semibold text-slate-950">Orders</h1>
 					</header>
 					<div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center">
-						<input
-							aria-label="Search orders by patient name or product"
-							className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100 sm:max-w-md"
-							onChange={handleSearchChange}
-							placeholder="Search by patient name or product..."
-							value={search}
-						/>
+						<div className="relative w-full sm:max-w-xl">
+							<IconSearch className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+							<input
+								aria-label="Search orders by customer, contact, address, order ID, product, status, or date"
+								className="w-full rounded-md border border-slate-300 bg-white py-2 pl-10 pr-10 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-teal-600 focus:ring-2 focus:ring-teal-100"
+								onChange={handleSearchChange}
+								placeholder="Search name, phone, address, order ID, product, status, or date..."
+								value={search}
+							/>
+							{search ? (
+								<button
+									aria-label="Clear order search"
+									className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+									onClick={clearSearch}
+									type="button"
+								>
+									<IconX size={16} />
+								</button>
+							) : null}
+						</div>
 						{searching ? (
 							<span className="inline-flex items-center gap-2 text-sm text-slate-500" role="status">
 								<span className="h-4 w-4 animate-spin rounded-full border-2 border-slate-300 border-t-teal-600" />
